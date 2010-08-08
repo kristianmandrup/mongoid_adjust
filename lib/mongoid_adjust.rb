@@ -43,7 +43,7 @@ module Mongoid::Document
     if set_allowed?(key)
       current_val = @attributes[key.to_s]
       @attributes[key.to_s] = proc.call(current_val)
-    elsif write_allowed?(key)
+    else
       current_val = send("#{key}")
       send("#{key}=", proc.call(current_val))
     end     
@@ -54,7 +54,7 @@ module Mongoid::Document
     if set_allowed?(key)
       current_val = @attributes[key.to_s]
       @attributes[key.to_s] = current_val.send(method)
-    elsif write_allowed?(key)
+    else
       current_val = send("#{key}")
       send("#{key}=", current_val.send(method))
     end     
@@ -68,8 +68,7 @@ module Mongoid::Document
       if current_val.kind_of? Numeric
         @attributes[key.to_s] = current_val + value 
       end
-
-    elsif write_allowed?(key)
+    else
       current_val = send("#{key}") || 0
 
       if current_val.kind_of? Numeric
