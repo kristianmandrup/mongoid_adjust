@@ -40,41 +40,23 @@ module Mongoid::Document
   private 
 
   def adjust_by_proc! key, proc
-    if set_allowed?(key)
-      current_val = @attributes[key.to_s]
-      @attributes[key.to_s] = proc.call(current_val)
-    else
-      current_val = send("#{key}")
-      send("#{key}=", proc.call(current_val))
-    end     
+    current_val = @attributes[key.to_s]
+    @attributes[key.to_s] = proc.call(current_val)
   end
 
   def adjust_by_symbol! key, name
     method = name.to_sym
-    if set_allowed?(key)
-      current_val = @attributes[key.to_s]
-      @attributes[key.to_s] = current_val.send(method)
-    else
-      current_val = send("#{key}")
-      send("#{key}=", current_val.send(method))
-    end     
+    current_val = @attributes[key.to_s]
+    @attributes[key.to_s] = current_val.send(method)
   end
 
   
   def adjust_by_number! key, value
-    if set_allowed?(key)
-      current_val = @attributes[key.to_s] || 0
+    current_val = @attributes[key.to_s] || 0
 
-      if current_val.kind_of? Numeric
-        @attributes[key.to_s] = current_val + value 
-      end
-    else
-      current_val = send("#{key}") || 0
-
-      if current_val.kind_of? Numeric
-        send("#{key}=", current_val + value) 
-      end
-    end 
+    if current_val.kind_of? Numeric
+      @attributes[key.to_s] = current_val + value 
+    end
   end
     
 end
