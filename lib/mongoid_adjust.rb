@@ -41,13 +41,13 @@ module Mongoid::Document
 
   def adjust_by_proc! key, proc
     current_val = @attributes[key.to_s]
-    @attributes[key.to_s] = proc.call(current_val)
+    self.update_attributes key.to_s => proc.call(current_val)
   end
 
   def adjust_by_symbol! key, name
     method = name.to_sym
     current_val = @attributes[key.to_s]
-    @attributes[key.to_s] = current_val.send(method)
+    self.update_attributes key.to_s => current_val.send(method)
   end
 
   
@@ -55,7 +55,7 @@ module Mongoid::Document
     current_val = @attributes[key.to_s] || 0
 
     if current_val.kind_of? Numeric
-      @attributes[key.to_s] = current_val + value 
+      self.update_attributes key.to_s => current_val + value
     end
   end
     
