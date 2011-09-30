@@ -9,7 +9,7 @@ module Mongoid::Extensions::Array
         end
       end
       self
-    end  
+    end
   end
 end
 
@@ -17,27 +17,27 @@ module Mongoid
   class Criteria
     def adjust!(attrs = {})
       to_a.adjust!(attrs)
-    end  
+    end
   end
 end
-     
-module Mongoid::Document 
+
+module Mongoid::Document
 
   def has_key? key
     @attributes[key.to_s] || respond_to?("#{key}=")
   end
-  
-  def adjust!(attrs = {})         
+
+  def adjust!(attrs = {})
     (attrs || {}).each_pair do |key, value|
       next if !has_key? key # only add to properties already present!
       adjust_by_proc!(key, value) if value.kind_of?(Proc)
       adjust_by_symbol!(key, value) if value.kind_of?(Symbol) || value.kind_of?(String)
-      adjust_by_number!(key, value) if value.kind_of?(Numeric) # only add integer values     
+      adjust_by_number!(key, value) if value.kind_of?(Numeric) # only add integer values
     end
     self
-  end  
+  end
 
-  private 
+  private
 
   def adjust_by_proc! key, proc
     current_val = @attributes[key.to_s]
@@ -50,7 +50,6 @@ module Mongoid::Document
     self.update_attributes key.to_s => current_val.send(method)
   end
 
-  
   def adjust_by_number! key, value
     current_val = @attributes[key.to_s] || 0
 
@@ -58,7 +57,6 @@ module Mongoid::Document
       self.update_attributes key.to_s => current_val + value
     end
   end
-    
 end
 
 class Array
